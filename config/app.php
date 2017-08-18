@@ -177,6 +177,12 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /**
+         * Layered Architecture providers
+         */
+        App\Providers\DomainLayerServiceProvider::class,
+        App\Providers\PersistenceLayerServiceProvider::class,
+
     ],
 
     /*
