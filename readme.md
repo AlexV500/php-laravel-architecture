@@ -1,50 +1,108 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# About PHP Laravel Architecture
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+This repository is a Laravel project, based on an N-Layer architecture.
 
-## About Laravel
+## Main Layers
+The management of layers allows to keep the code clean as each has a single responsibility.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+### Distributed Services
+Located in **App\Http\Controllers\DistributedServices** 
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Allows to handle the code referring to web services, in this way is kept isolated from the drivers used to render the views.
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
+### Domain Layer
 
-## Learning Laravel
+Located in **App\DomainLayer**
 
-Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
+Allows you to handle all business logic.
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 900 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+### Persistence Layer
 
-## Laravel Sponsors
+Located in **App\PersistenceLayer**
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](http://patreon.com/taylorotwell):
+Allows to control the persistence of data, in the case of consuming a webservices, database, etc.
 
-- **[Vehikl](http://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Styde](https://styde.net)**
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
 
-## Contributing
+## IDesoft Entity [Generic Model class]
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+Generic model class that all domain classes can extend.
 
-## Security Vulnerabilities
+This class allows you to easily create an object from an array or a string / json.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+1. Create your entity class and extend it from IDesoft Entity
+
+```php
+
+namespace App\DomainLayer\DomainEntities;
+
+class UserEntity extends IDesoftEntity
+{
+    /**
+     * Unique identifier of vehicle tracking resource.
+     *
+     * @param integer $id
+     * 
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * Identifier of the vehicle track. 128 characters max.
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setUsername($username)
+    {
+        $this->username = $username;
+        return $this;
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function setPassword($password)
+    {
+        $this->password = $password;
+        return $this;
+    }
+
+    public function getPassword()
+    {
+        return $this->password;
+    }
+}
+```
+2. Creates an object of type UserEntity (Created in part 1)
+```php
+$credentials = [
+    'username' => 'someusername',
+    'password' => 'somepassword'
+];
+
+$userEntity = new UserEntity($credentials);
+
+echo $userEntity->getUsername();
+echo $userEntity->getPassword();
+
+// results
+// someusername
+// somepassword
+```
+
+## Changelog
+
+### 1.0.0 (10 Aug 2017)
 
 ## License
 
